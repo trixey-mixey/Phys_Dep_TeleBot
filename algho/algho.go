@@ -105,9 +105,9 @@ func GetRandErr(a ...float64) (result float64, err error) { // Расчет сл
 // 	return GetRoundedFloat(1.960*unit/3, digitsAfterDot*3)
 // }
 
-func GetInstrErr(a ...float64) (result float64) { // Расчет приборной погрешности
+func GetInstrErr(unit float64, a ...float64) (result float64) { // Расчет приборной погрешности
 	digitsAfterDot := GetDigitsAfterDot(a[0])
-	return GetRoundedFloat(1.960*math.Pow(0.1, float64(digitsAfterDot))/3, digitsAfterDot*3)
+	return GetRoundedFloat(1.960*unit/3, digitsAfterDot*3)
 }
 
 // func GetFullErr(unit float64, a ...float64) (result float64, err error) { // Расчет полной погрешности
@@ -120,9 +120,9 @@ func GetInstrErr(a ...float64) (result float64) { // Расчет приборн
 // 	return GetRoundedFloat(math.Sqrt(math.Pow(instrErr, 2)+math.Pow(randErr, 2)), digitsAfterDot), nil
 // }
 
-func GetFullErr(a ...float64) (result float64, err error) { // Расчет полной погрешности
+func GetFullErr(unit float64, a ...float64) (result float64, err error) { // Расчет полной погрешности
 	digitsAfterDot := GetDigitsAfterDot(a[1])
-	instrErr := GetInstrErr(a...)
+	instrErr := GetInstrErr(unit, a...)
 	randErr, err := GetRandErr(a...)
 	if err != nil {
 		return 0.0, err

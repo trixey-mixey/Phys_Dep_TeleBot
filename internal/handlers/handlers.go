@@ -41,7 +41,7 @@ func Start(ctx context.Context, b *bot.Bot, update *models.Update) {
 func Count(ctx context.Context, b *bot.Bot, update *models.Update) {
 	b.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID: update.Message.Chat.ID,
-		Text:   "Введите измерения через пробел, разделяя дробную часть точкой.\nНапример: 12.2 12.4 12.3",
+		Text:   "Введите точность прибора, измерения через пробел, разделяя дробную часть точкой.\nНапример: 0.01 12.2 12.4 12.3",
 	})
 
 	userState[update.Message.Chat.ID] = "waiting_for_numbers"
@@ -57,7 +57,12 @@ func convertStringAndSendTable(str string, ctx context.Context, b *bot.Bot, upda
 		})
 		return err
 	}
-	strSlice := strings.Split(str, " ")
+
+	instAcc, _ := strconv.ParseFloat(strings.Split(str, " ")[0], 64)
+	fmt.Println(instAcc)
+
+	strSlice := strings.Split(str, " ")[1:]
+	fmt.Println(strSlice)
 	var floatSlice []float64
 	for _, s := range strSlice {
 		floatEl, _ := strconv.ParseFloat(s, 64)
@@ -90,13 +95,13 @@ func convertStringAndSendTable(str string, ctx context.Context, b *bot.Bot, upda
 	SO, _ := algho.GetSO(floatSlice...)
 	SOString := strconv.FormatFloat(SO, 'f', -1, 64)
 
-	instrErr := algho.GetInstrErr(floatSlice...)
+	instrErr := algho.GetInstrErr(instAcc, floatSlice...)
 	instrErrString := strconv.FormatFloat(instrErr, 'f', -1, 64)
 
 	randErr, _ := algho.GetRandErr(floatSlice...)
 	randErrString := strconv.FormatFloat(randErr, 'f', -1, 64)
 
-	fullErr, _ := algho.GetFullErr(floatSlice...)
+	fullErr, _ := algho.GetFullErr(instAcc, floatSlice...)
 	fullErrString := strconv.FormatFloat(fullErr, 'f', -1, 64)
 
 	b.SendMessage(ctx, &bot.SendMessageParams{
