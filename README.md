@@ -12,4 +12,5 @@
 # ChangeLog:
 
 > Version 0.0.1: first commit
+
 > Version 0.0.2: Added ability to input accuracy of instrument 
