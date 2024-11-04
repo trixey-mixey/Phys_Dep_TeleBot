@@ -68,6 +68,7 @@ func convertStringAndSendTable(str string, ctx context.Context, b *bot.Bot, upda
 		floatEl, _ := strconv.ParseFloat(s, 64)
 		floatSlice = append(floatSlice, floatEl)
 	}
+	fmt.Println(algho.GetDigitsAfterDot(floatSlice[1]))
 	avg, err := algho.GetAverage(floatSlice...)
 
 	if err != nil {

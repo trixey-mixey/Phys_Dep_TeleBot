@@ -31,7 +31,7 @@ func GetAverage(a ...float64) (result float64, err error) { // Расчет ср
 
 func GetAverageMinusEl(a ...float64) (result []float64, err error) { // Расчет разности среднего арифметического и i изм.
 	var res []float64
-	digitsAfterDot := GetDigitsAfterDot(a[0])
+	digitsAfterDot := GetDigitsAfterDotInLoop(a...)
 	avg, err := GetAverage(a...)
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func GetAverageMinusEl(a ...float64) (result []float64, err error) { // Расч
 
 func GetSquare(a ...float64) (result []float64, err error) { // Расчет квадрата разности
 	var res []float64
-	digitsAfterDot := GetDigitsAfterDot(a[0])
+	digitsAfterDot := GetDigitsAfterDotInLoop(a...)
 	avg, err := GetAverage(a...)
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func GetSquare(a ...float64) (result []float64, err error) { // Расчет к�
 }
 
 func GetSO(a ...float64) (result float64, err error) { // Расчет среднеквадратичного отклонения
-	digitsAfterDot := GetDigitsAfterDot(a[0])
+	digitsAfterDot := GetDigitsAfterDotInLoop(a...)
 	squaredArr, err := GetSquare(a...)
 	if err != nil {
 		return 0, err
@@ -70,7 +70,7 @@ func GetSO(a ...float64) (result float64, err error) { // Расчет сред�
 }
 
 func GetRandErr(a ...float64) (result float64, err error) { // Расчет случайной погрешности
-	digitsAfterDot := GetDigitsAfterDot(a[0])
+	digitsAfterDot := GetDigitsAfterDotInLoop(a...)
 	SO, err := GetSO(a...)
 	var coefStudent float64
 	if err != nil {
@@ -106,7 +106,7 @@ func GetRandErr(a ...float64) (result float64, err error) { // Расчет сл
 // }
 
 func GetInstrErr(unit float64, a ...float64) (result float64) { // Расчет приборной погрешности
-	digitsAfterDot := GetDigitsAfterDot(a[0])
+	digitsAfterDot := GetDigitsAfterDotInLoop(a...)
 	return GetRoundedFloat(1.960*unit/3, digitsAfterDot*3)
 }
 
@@ -121,7 +121,7 @@ func GetInstrErr(unit float64, a ...float64) (result float64) { // Расчет 
 // }
 
 func GetFullErr(unit float64, a ...float64) (result float64, err error) { // Расчет полной погрешности
-	digitsAfterDot := GetDigitsAfterDot(a[1])
+	digitsAfterDot := GetDigitsAfterDotInLoop(a...)
 	instrErr := GetInstrErr(unit, a...)
 	randErr, err := GetRandErr(a...)
 	if err != nil {
@@ -131,13 +131,24 @@ func GetFullErr(unit float64, a ...float64) (result float64, err error) { // Р�
 }
 
 func GetDigitsAfterDot(num float64) int {
+
 	formatedFloat := strconv.FormatFloat(num, 'f', -1, 64)
 	if !strings.Contains(formatedFloat, ".") {
-		return 1
+		return 0
 	}
 	digitsAfterPoint := (len(formatedFloat) - strings.Index(formatedFloat, ".") - 1)
 	return digitsAfterPoint
 
+}
+
+func GetDigitsAfterDotInLoop(nums ...float64) int {
+	digitsAfterDot := GetDigitsAfterDot(nums[1])
+	for _, num := range nums {
+		if GetDigitsAfterDot(num) > digitsAfterDot {
+			digitsAfterDot = GetDigitsAfterDot(num)
+		}
+	}
+	return digitsAfterDot
 }
 
 func GetRoundedFloat(num float64, digitsAfterDot int) float64 {
