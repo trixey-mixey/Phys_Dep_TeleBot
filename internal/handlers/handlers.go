@@ -49,6 +49,13 @@ func Count(ctx context.Context, b *bot.Bot, update *models.Update) {
 }
 
 func convertStringAndSendTable(str string, ctx context.Context, b *bot.Bot, update *models.Update) error {
+	if len(strings.Split(str, " ")) < 3 {
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID: update.Message.Chat.ID,
+			Text:   "Введите больше значений",
+		})
+		return errors.New("недостаточно измеиений")
+	}
 	if !strings.Contains(str, " ") {
 		err := errors.New("разделите измерения пробелом")
 		b.SendMessage(ctx, &bot.SendMessageParams{

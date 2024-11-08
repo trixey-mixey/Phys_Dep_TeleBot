@@ -142,7 +142,7 @@ func GetDigitsAfterDot(num float64) int {
 }
 
 func GetDigitsAfterDotInLoop(nums ...float64) int {
-	digitsAfterDot := GetDigitsAfterDot(nums[1])
+	digitsAfterDot := GetDigitsAfterDot(nums[0])
 	for _, num := range nums {
 		if GetDigitsAfterDot(num) > digitsAfterDot {
 			digitsAfterDot = GetDigitsAfterDot(num)
